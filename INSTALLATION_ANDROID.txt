@@ -1,0 +1,36 @@
+MEIN BONSAI-ARCHIV – ANDROID/PWA-VERSION
+
+Was enthalten ist:
+- Die bisherige Bonsai-Verwaltung mit Fotos und Pflegeprotokoll
+- App-Symbol und Startbildschirm-Installation
+- Offline-Unterstützung nach dem ersten Laden
+- Lokale Speicherung im Browser/App-Profil auf dem jeweiligen Gerät
+
+WICHTIG ZUR INSTALLATION:
+Diese Ausgabe ist eine installierbare Web-App (PWA), keine APK-Datei und keine Play-Store-App.
+Android/Chrome kann sie wie eine App auf dem Startbildschirm installieren. Dafür muss sie
+zunächst über eine HTTPS-Adresse aufgerufen werden. Das direkte Öffnen der index.html aus
+diesem ZIP reicht für die Installationsfunktion und den Offline-Modus nicht aus.
+
+Ein einfacher kostenloser Weg:
+1. Den ZIP-Ordner entpacken.
+2. Den gesamten Inhalt des Ordners „Mein_Bonsai_Archiv_Android“ auf einen HTTPS-Webhost hochladen,
+   der statische Dateien unterstützt (z. B. GitHub Pages). Die Dateien müssen zusammen in
+   demselben Verzeichnis liegen.
+3. Die veröffentlichte HTTPS-Adresse auf dem Samsung-Handy in Google Chrome öffnen.
+4. Im Chrome-Menü (drei Punkte) „App installieren“ oder „Zum Startbildschirm hinzufügen“ wählen.
+   Die Bezeichnung kann je nach Chrome-Version leicht abweichen.
+5. Danach erscheint „Bonsai-Archiv“ als Symbol auf dem Startbildschirm.
+
+Offline:
+Nach dem ersten vollständigen Aufruf und Laden kann die App offline geöffnet werden.
+Fotos und Bonsai-Daten bleiben lokal auf diesem Gerät. Es gibt keine automatische Synchronisierung.
+
+Datensicherung:
+Bitte regelmäßig in der App „Sammlung sichern“ verwenden. Die JSON-Sicherungsdatei enthält
+auch die Fotos. Auf einem anderen Gerät die App öffnen und „Sicherung importieren“ wählen.
+
+Hinweis:
+Die HTTPS-Veröffentlichung macht die App-Adresse erreichbar. Die eigentlichen Bonsai-Daten
+werden weiterhin lokal im Browser gespeichert und nicht automatisch auf den Webhost hochgeladen.
+Bewahre Sicherungsdateien sorgfältig auf.

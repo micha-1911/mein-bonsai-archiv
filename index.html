@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#234b35">
+<meta name="description" content="Dein persönliches Bonsai-Archiv mit Fotos und Pflegeprotokoll.">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<title>Mein Bonsai-Archiv</title>
+<style>
+:root{--green:#234b35;--green2:#356b49;--pale:#edf4ed;--cream:#f7f7f0;--ink:#243229;--muted:#68766c;--line:#dce5dc;--white:#fff;--red:#a33d36}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
+header{background:linear-gradient(135deg,#1d402d,#39734d);color:white;padding:22px max(18px,calc((100vw - 1100px)/2));}
+.brand{display:flex;align-items:center;gap:12px}.logo{font-size:32px}.brand h1{font-size:23px;margin:0}.brand p{margin:3px 0 0;color:#dce9de;font-size:13px}
+main{max-width:1100px;margin:auto;padding:20px 16px 50px}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}
+button,.filebtn{border:0;border-radius:11px;padding:11px 15px;font-weight:650;font-size:14px;cursor:pointer;background:var(--green);color:white}
+button.secondary,.filebtn.secondary{background:#e5eee5;color:var(--green);border:1px solid #cfddcf}
+button.danger{background:#fff0ee;color:var(--red);border:1px solid #efd0cc}
+button:disabled{opacity:.5;cursor:default}
+input,select,textarea{font:inherit;border:1px solid #cbd8cc;border-radius:10px;padding:11px;background:white;color:var(--ink);width:100%}
+textarea{min-height:90px;resize:vertical}
+.searchrow{display:flex;gap:10px;margin-bottom:15px}.searchrow input{flex:1}
+.stats{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}.stat{background:white;border:1px solid var(--line);border-radius:12px;padding:10px 14px;color:var(--muted);font-size:13px}.stat strong{color:var(--green);font-size:18px;margin-right:5px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:15px}
+.card{background:white;border:1px solid var(--line);border-radius:15px;overflow:hidden;cursor:pointer;transition:.15s}
+.card:hover{transform:translateY(-2px);box-shadow:0 5px 18px #183c2414}
+.thumb{height:175px;background:#e6eee5;display:flex;align-items:center;justify-content:center;color:#78917b;font-size:42px;overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover}.cardbody{padding:13px}.card h3{margin:0 0 4px;font-size:17px}.sub{font-size:13px;color:var(--muted)}.pill{display:inline-block;background:var(--pale);color:var(--green);padding:4px 8px;border-radius:20px;font-size:11px;margin-top:9px}
+.empty{background:white;border:1px dashed #b9cbb9;border-radius:16px;padding:36px 20px;text-align:center;color:var(--muted)}.empty .tree{font-size:42px}
+.panel{background:white;border:1px solid var(--line);border-radius:16px;padding:18px;margin:14px 0}
+.panel h2{margin:0 0 14px;font-size:19px;color:var(--green)}
+.formgrid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field label{display:block;font-size:13px;font-weight:650;margin:0 0 5px;color:#536257}.field.full{grid-column:1/-1}
+.hidden{display:none!important}.back{margin-bottom:12px}.detailhead{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;flex-wrap:wrap}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}.photo{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#f5f7f3}.photo img{width:100%;height:150px;object-fit:cover;display:block}.photo .caption{padding:8px;font-size:12px;color:var(--muted)}.photo button{margin:0 8px 8px;padding:6px 9px;font-size:12px}
+.logitem{border-left:3px solid #9bb99e;padding:2px 0 12px 12px;margin:8px 0}.logitem strong{font-size:13px}.logitem p{margin:3px 0;color:var(--muted);font-size:14px}
+footer{color:#7a877c;text-align:center;font-size:12px;padding:25px}
+.notice{background:#f0f5eb;border:1px solid #d7e4d3;color:#38563d;border-radius:11px;padding:11px 13px;font-size:13px;margin:12px 0}
+@media(max-width:600px){.formgrid{grid-template-columns:1fr}.field.full{grid-column:auto}.searchrow{flex-direction:column}.toolbar button,.toolbar label{flex:1;text-align:center}.detailhead h2{font-size:22px}}
+</style>
+</head>
+<body>
+<header><div class="brand"><div class="logo">🌳</div><div><h1>Mein Bonsai-Archiv</h1><p>Meine Bäume. Ihre Geschichten. Jahr für Jahr.</p></div></div></header>
+<main>
+<section id="home">
+  <div class="toolbar">
+    <button id="addBtn">＋ Bonsai hinzufügen</button>
+    <button class="secondary" id="exportBtn">⬇ Sammlung sichern</button>
+    <label class="filebtn secondary" for="importFile">⬆ Sicherung importieren</label><input id="importFile" class="hidden" type="file" accept=".json,application/json">
+  </div>
+  <div class="notice">Deine Sammlung wird lokal in diesem Browser gespeichert. Für den Wechsel zwischen PC und Handy bitte regelmäßig eine Sicherung exportieren und auf dem anderen Gerät importieren.</div>
+  <div class="stats"><div class="stat"><strong id="treeCount">0</strong>Bonsais</div><div class="stat"><strong id="photoCount">0</strong>Fotos</div></div>
+  <div class="searchrow"><input id="search" placeholder="🔎 Bonsai suchen …"><select id="speciesFilter"><option value="">Alle Baumarten</option></select></div>
+  <div id="treeGrid" class="grid"></div>
+</section>
+
+<section id="editor" class="hidden">
+  <button class="secondary back" id="cancelEdit">← Zurück zur Sammlung</button>
+  <div class="panel"><h2 id="editorTitle">Neuen Bonsai anlegen</h2>
+  <form id="treeForm"><div class="formgrid">
+    <div class="field"><label for="treeName">Name / Bezeichnung *</label><input id="treeName" required placeholder="z. B. Itoigawa Nr. 1"></div>
+    <div class="field"><label for="species">Baumart</label><input id="species" placeholder="z. B. Juniperus chinensis"></div>
+    <div class="field"><label for="style">Gestaltungsform</label><input id="style" placeholder="z. B. Moyogi, Kengai"></div>
+    <div class="field"><label for="acquired">Seit wann in meiner Sammlung?</label><input id="acquired" type="date"></div>
+    <div class="field full"><label for="treeNotes">Allgemeine Notizen</label><textarea id="treeNotes" placeholder="Herkunft, Besonderheiten, Ziele …"></textarea></div>
+  </div><p><button type="submit">Speichern</button></p></form></div>
+</section>
+
+<section id="detail" class="hidden">
+  <button class="secondary back" id="backHome">← Zurück zur Sammlung</button>
+  <div class="panel">
+    <div class="detailhead"><div><h2 id="detailName"></h2><div class="sub" id="detailMeta"></div></div><div class="toolbar"><button class="secondary" id="editTree">Bearbeiten</button><button class="danger" id="deleteTree">Löschen</button></div></div>
+    <p id="detailNotes"></p>
+  </div>
+  <div class="panel"><h2>📷 Entwicklungsfotos</h2>
+    <div class="field"><label for="photoFiles">Fotos vom Handy oder PC hinzufügen</label><input id="photoFiles" type="file" accept="image/*" multiple></div>
+    <div class="field" style="margin-top:10px"><label for="photoDate">Datum der Aufnahme / Bearbeitung</label><input id="photoDate" type="date"></div>
+    <div class="field" style="margin-top:10px"><label for="photoCaption">Notiz zu diesen Fotos (optional)</label><input id="photoCaption" placeholder="z. B. Nach dem Rückschnitt im Frühjahr"></div>
+    <p><button id="savePhotos">Fotos hinzufügen</button></p>
+    <div id="gallery" class="gallery"></div>
+  </div>
+  <div class="panel"><h2>📝 Pflege- und Arbeitsprotokoll</h2>
+    <div class="formgrid">
+      <div class="field"><label for="logDate">Datum</label><input id="logDate" type="date"></div>
+      <div class="field"><label for="logType">Arbeit</label><select id="logType"><option>Schnitt</option><option>Drahten</option><option>Umtopfen</option><option>Düngen</option><option>Gestaltung</option><option>Sonstiges</option></select></div>
+      <div class="field full"><label for="logText">Notiz</label><textarea id="logText" placeholder="Was wurde gemacht? Wie hat der Baum reagiert?"></textarea></div>
+    </div><p><button id="addLog">Eintrag speichern</button></p><div id="logList"></div>
+  </div>
+</section>
+</main>
+<footer>Mein Bonsai-Archiv · Lokale Speicherung auf diesem Gerät</footer>
+<script>
+const DB_NAME='mein-bonsai-archiv', DB_VERSION=1;
+let db, currentId=null, editingId=null, currentTrees=[];
+const $=id=>document.getElementById(id);
+const today=()=>new Date().toISOString().slice(0,10);
+function openDB(){return new Promise((resolve,reject)=>{const req=indexedDB.open(DB_NAME,DB_VERSION);req.onupgradeneeded=()=>{const d=req.result;if(!d.objectStoreNames.contains('trees'))d.createObjectStore('trees',{keyPath:'id'});};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error);});}
+function tx(mode='readonly'){return db.transaction('trees',mode).objectStore('trees)}
+function allTrees(){return new Promise((res,rej)=>{const r=tx().getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});}
+function saveTree(t){return new Promise((res,rej)=>{const r=tx('readwrite').put(t);r.onsuccess=()=>res();r.onerror=()=>rej(r.error);});}
+function deleteTreeDB(id){return new Promise((res,rej)=>{const r=tx('readwrite').delete(id);r.onsuccess=()=>res();r.onerror=()=>rej(r.error);});}
+function show(section){['home','editor','detail'].forEach(s=>$(s).classList.toggle('hidden',s!==section));}
+function uid(){return Date.now().toString(36)+Math.random().toString(36).slice(2,8)}
+function fmt(d){if(!d)return 'ohne Datum';return new Date(d+'T12:00:00').toLocaleDateString('de-DE')}
+function imgURL(blob){return URL.createObjectURL(blob)}
+async function refresh(){
+ currentTrees=(await allTrees()).sort((a,b)=>a.name.localeCompare(b.name,'de'));
+ $('treeCount').textContent=currentTrees.length;
+ $('photoCount').textContent=currentTrees.reduce((n,t)=>n+(t.photos||[]).length,0);
+ const species=[...new Set(currentTrees.map(t=>t.species).filter(Boolean))].sort();
+ const selected=$('speciesFilter').value;
+ $('speciesFilter').innerHTML='<option value="">Alle Baumarten</option>'+species.map(s=>`<option>${escapeHTML(s)}</option>`).join('');
+ $('speciesFilter').value=species.includes(selected)?selected:'';
+ renderGrid();
+}
+function escapeHTML(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function renderGrid(){
+ const q=$('search').value.toLowerCase(), sp=$('speciesFilter').value;
+ const list=currentTrees.filter(t=>(!sp||t.species===sp)&&[t.name,t.species,t.style].join(' ').toLowerCase().includes(q));
+ $('treeGrid').innerHTML=list.length?list.map(t=>`<article class="card" data-id="${t.id}"><div class="thumb">${t.photos?.length?`<img src="${imgURL(t.photos[0].blob)}" alt="">`:'🌱'}</div><div class="cardbody"><h3>${escapeHTML(t.name)}</h3><div class="sub">${escapeHTML(t.species||'Baumart nicht angegeben')}</div><span class="pill">${(t.photos||[]).length} Fotos</span></div></article>`).join(''):'<div class="empty"><div class="tree">🌳</div><h3>Noch keine Bonsais angelegt</h3><p>Lege deinen ersten Baum an und füge anschließend Fotos hinzu.</p><button onclick="$(\\'addBtn\\').click()">Ersten Bonsai anlegen</button></div>';
+ $('treeGrid').querySelectorAll('.card').forEach(c=>c.addEventListener('click',()=>openDetail(c.dataset.id)));
+}
+function clearForm(){['treeName','species','style','acquired','treeNotes'].forEach(id=>$(id).value='');}
+function editForm(t=null){editingId=t?.id||null;clearForm();$('editorTitle').textContent=t?'Bonsai bearbeiten':'Neuen Bonsai anlegen';if(t){$('treeName').value=t.name;$('species').value=t.species||'';$('style').value=t.style||'';$('acquired').value=t.acquired||'';$('treeNotes').value=t.notes||'';}show('editor');}
+$('addBtn').onclick=()=>editForm();
+$('cancelEdit').onclick=()=>show('home');
+$('treeForm').onsubmit=async e=>{e.preventDefault();const old=editingId?currentTrees.find(t=>t.id===editingId):null;const t={...(old||{}),id:old?.id||uid(),name:$('treeName').value.trim(),species:$('species').value.trim(),style:$('style').value.trim(),acquired:$('acquired').value,notes:$('treeNotes').value,photos:old?.photos||[],logs:old?.logs||[]};await saveTree(t);await refresh();if(old)openDetail(t.id);else show('home');};
+$('search').oninput=renderGrid;$('speciesFilter').onchange=renderGrid;
+$('backHome').onclick=()=>{show('home');refresh()};
+async function openDetail(id){currentId=id;const t=currentTrees.find(x=>x.id===id)||await new Promise(r=>{const q=tx().get(id);q.onsuccess=()=>r(q.result)});if(!t)return;
+ $('detailName').textContent=t.name;$('detailMeta').textContent=[t.species,t.style,t.acquired?'Seit '+fmt(t.acquired):''].filter(Boolean).join(' · ');$('detailNotes').textContent=t.notes||'Keine allgemeinen Notizen.';$('photoDate').value=today();$('logDate').value=today();$('photoCaption').value='';$('photoFiles').value='';$('logText').value='';
+ renderGallery(t);renderLogs(t);show('detail');
+}
+function renderGallery(t){$('gallery').innerHTML=(t.photos||[]).length?t.photos.slice().sort((a,b)=>(b.date||'').localeCompare(a.date||'')).map(p=>`<div class="photo"><img src="${imgURL(p.blob)}" alt=""><div class="caption"><strong>${fmt(p.date)}</strong><br>${escapeHTML(p.caption||'')}</div><button class="danger" data-photo="${p.id}">Foto löschen</button></div>`).join(''):'<p class="sub">Noch keine Fotos vorhanden.</p>';$('gallery').querySelectorAll('[data-photo]').forEach(b=>b.onclick=async()=>{if(!confirm('Dieses Foto wirklich löschen?'))return;const t=await getCurrent();t.photos=t.photos.filter(p=>p.id!==b.dataset.photo);await saveTree(t);await refresh();renderGallery(t);});}
+function renderLogs(t){const logs=(t.logs||[]).slice().sort((a,b)=>(b.date||'').localeCompare(a.date||''));$('logList').innerHTML=logs.length?logs.map(l=>`<div class="logitem"><strong>${fmt(l.date)} · ${escapeHTML(l.type)}</strong><p>${escapeHTML(l.text||'')}</p></div>`).join(''):'<p class="sub">Noch keine Einträge.</p>';}
+async function getCurrent(){return new Promise(r=>{const q=tx().get(currentId);q.onsuccess=()=>r(q.result);});}
+$('savePhotos').onclick=async()=>{const files=[...$('photoFiles').files];if(!files.length){alert('Bitte zuerst mindestens ein Foto auswählen.');return;}const t=await getCurrent();for(const f of files){if(!f.type.startsWith('image/'))continue;t.photos.push({id:uid(),date:$('photoDate').value||today(),caption:$('photoCaption').value.trim(),name:f.name,blob:f});}await saveTree(t);await refresh();renderGallery(t);$('photoFiles').value='';alert(files.length+' Foto(s) hinzugefügt.');};
+$('addLog').onclick=async()=>{if(!$('logText').value.trim()){alert('Bitte eine kurze Notiz eingeben.');return;}const t=await getCurrent();t.logs.push({id:uid(),date:$('logDate').value||today(),type:$('logType').value,text:$('logText').value.trim()});await saveTree(t);renderLogs(t);$('logText').value='';};
+$('editTree').onclick=async()=>editForm(await getCurrent());
+$('deleteTree').onclick=async()=>{if(confirm('Diesen Bonsai einschließlich aller Fotos und Notizen löschen?')){await deleteTreeDB(currentId);await refresh();show('home');}};
+async function blobToDataURL(blob){return new Promise((res,rej)=>{const r=new FileReader();r.onload=()=>res(r.result);r.onerror=rej;r.readAsDataURL(blob);});}
+async function dataURLToBlob(url){const r=await fetch(url);return await r.blob();}
+$('exportBtn').onclick=async()=>{const trees=await allTrees();const out=[];for(const t of trees){const photos=[];for(const p of t.photos||[])photos.push({...p,blob:await blobToDataURL(p.blob)});out.push({...t,photos});}const data={app:'Mein Bonsai-Archiv',version:1,exportedAt:new Date().toISOString(),trees:out};const blob=new Blob([JSON.stringify(data)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='bonsai-sicherung-'+today()+'.json';a.click();URL.revokeObjectURL(a.href);};
+$('importFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{const data=JSON.parse(await f.text());if(data.app!=='Mein Bonsai-Archiv'||!Array.isArray(data.trees))throw Error('Ungültige Sicherungsdatei');if(!confirm(`${data.trees.length} Bonsai(s) importieren? Vorhandene Bäume mit gleicher ID werden aktualisiert.`))return;for(const t of data.trees){for(const p of t.photos||[])if(typeof p.blob==='string')p.blob=await dataURLToBlob(p.blob);await saveTree(t);}await refresh();alert('Import abgeschlossen.');}catch(err){alert('Import fehlgeschlagen: '+err.message);}e.target.value='';};
+(async()=>{try{db=await openDB();await refresh();}catch(e){alert('Der lokale Speicher konnte nicht geöffnet werden. Bitte die App in einem aktuellen Browser öffnen.');}})();
+</script>
+<script>
+if ('serviceWorker' in navigator) { window.addEventListener('load', () => navigator.serviceWorker.register('./service-worker.js').catch(err => console.warn('Offline-Modus nicht verfügbar:', err))); }
+</script>
+</body></html>
