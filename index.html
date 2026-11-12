@@ -8,7 +8,7 @@
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="apple-touch-icon" href="icons/icon-192.png">
 <title>Mein Bonsai-Archiv</title>
-<style>
+<style>F
 :root{--green:#234b35;--green2:#356b49;--pale:#edf4ed;--cream:#f7f7f0;--ink:#243229;--muted:#68766c;--line:#dce5dc;--white:#fff;--red:#a33d36}
 *{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.45 system-ui,-apple-system,Segoe UI,sans-serif}
 header{background:linear-gradient(135deg,#1d402d,#39734d);color:white;padding:22px max(18px,calc((100vw - 1100px)/2));}
@@ -118,7 +118,7 @@ function escapeHTML(s=''){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','
 function renderGrid(){
  const q=$('search').value.toLowerCase(), sp=$('speciesFilter').value;
  const list=currentTrees.filter(t=>(!sp||t.species===sp)&&[t.name,t.species,t.style].join(' ').toLowerCase().includes(q));
- $('treeGrid').innerHTML=list.length?list.map(t=>`<article class="card" data-id="${t.id}"><div class="thumb">${t.photos?.length?`<img src="${imgURL(t.photos[0].blob)}" alt="">`:'🌱'}</div><div class="cardbody"><h3>${escapeHTML(t.name)}</h3><div class="sub">${escapeHTML(t.species||'Baumart nicht angegeben')}</div><span class="pill">${(t.photos||[]).length} Fotos</span></div></article>`).join(''):'<div class="empty"><div class="tree">🌳</div><h3>Noch keine Bonsais angelegt</h3><p>Lege deinen ersten Baum an und füge anschließend Fotos hinzu.</p><button onclick="$(\\'addBtn\\').click()">Ersten Bonsai anlegen</button></div>';
+ $('treeGrid').innerHTML=list.length?list.map(t=>`<article class="card" data-id="${t.id}"><div class="thumb">${t.photos?.length?`<img src="${imgURL(t.photos[0].blob)}" alt="">`:'🌱'}</div><div class="cardbody"><h3>${escapeHTML(t.name)}</h3><div class="sub">${escapeHTML(t.species||'Baumart nicht angegeben')}</div><span class="pill">${(t.photos||[]).length} Fotos</span></div></article>`).join(''):'<div class="empty"><div class="tree">🌳</div><h3>Noch keine Bonsais angelegt</h3><p>Lege deinen ersten Baum an und füge anschließend Fotos hinzu.</p><button onclick="document.getElementById(&quot;addBtn&quot;).click()">Ersten Bonsai anlegen</button></div>';
  $('treeGrid').querySelectorAll('.card').forEach(c=>c.addEventListener('click',()=>openDetail(c.dataset.id)));
 }
 function clearForm(){['treeName','species','style','acquired','treeNotes'].forEach(id=>$(id).value='');}
